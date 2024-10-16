@@ -26,6 +26,28 @@ def BFS(matrix, start, end):
     path=[]
     visited={}
 
+    queue = [start]
+    visited[start] = None
+
+    while len(queue) > 0:
+        node = queue.pop(0)
+        if node == end:
+            break
+        for i in range(len(matrix[node])):
+            if matrix[node][i] and i not in visited:
+                visited[i] = node
+                queue.append(i)
+
+    node = end
+    # Truy ngược lại từ end để tìm path
+    while node != None:
+        path.insert(0, node)
+        node = visited[node]
+  
+    # In ra visited và path
+    print(visited)
+    print(path)
+
     return visited, path
 
 def DFS(matrix, start, end):
@@ -53,6 +75,28 @@ def DFS(matrix, start, end):
     
     path=[]
     visited={}
+
+    stack = [start]
+    visited[start] = None
+
+    while len(stack) > 0:
+        node = stack.pop(0)
+        if node == end:
+            break
+        for i in range(len(matrix[node])):
+            if matrix[node][i] and i not in visited:
+                visited[i] = node
+                stack.append(i)
+
+    node = end
+    # Truy ngược lại từ end để tìm path
+    while node != None:
+        path.insert(0, node)
+        node = visited[node]
+  
+    # In ra visited và path
+    print(visited)
+    print(path)
    
     return visited, path
 
