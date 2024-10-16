@@ -25,17 +25,22 @@ def BFS(matrix, start, end):
    
     path=[]
     visited={}
+    node_before = {}
 
     queue = [start]
     visited[start] = None
+    node_before[start] = None
 
-    while len(queue) > 0:
+    while queue:
         node = queue.pop(0)
+        visited[node] = node_before[node]
+
         if node == end:
             break
+
         for i in range(len(matrix[node])):
             if matrix[node][i] and i not in visited:
-                visited[i] = node
+                node_before[i] = node
                 queue.append(i)
 
     node = end
@@ -75,17 +80,22 @@ def DFS(matrix, start, end):
     
     path=[]
     visited={}
+    node_before = {}
 
     stack = [start]
     visited[start] = None
+    node_before[start] = None
 
-    while len(stack) > 0:
-        node = stack.pop(0)
+    while stack:
+        node = stack.pop()
+        visited[node] = node_before[node]
+
         if node == end:
             break
+
         for i in range(len(matrix[node])):
             if matrix[node][i] and i not in visited:
-                visited[i] = node
+                node_before[i] = node
                 stack.append(i)
 
     node = end
