@@ -25,20 +25,24 @@ def BFS(matrix, start, end):
    
     path=[]
     visited={}
-    node_before = {}
+    node_before = {} # Danh sách các node trước đó của node hiện tại
 
-    queue = [start]
-    visited[start] = None
-    node_before[start] = None
+    queue = [start] # Queue chứa các node cần thăm, push start vào queue
+    visited[start] = None # start là node đầu tiên nên node thăm trước đó là None
+    node_before[start] = None 
 
     while queue:
-        node = queue.pop(0)
-        visited[node] = node_before[node]
+        node = queue.pop(0) # Lấy node đầu tiên ra khỏi queue (thăm đỉnh)
+        visited[node] = node_before[node] # Đánh dấu node đã thăm
 
+        # Nếu node vừa thăm là end thì dừng tìm kiếm
         if node == end:
             break
 
+        # Thêm các node kề của node vừa thăm vào queue
         for i in range(len(matrix[node])):
+            # Nếu có cạnh nối từ node đang xét đến node i và node i chưa được thăm, đánh dấu node trước đó của node i là node đang xét
+            # Push node i vào queue
             if matrix[node][i] and i not in visited:
                 node_before[i] = node
                 queue.append(i)
@@ -49,7 +53,7 @@ def BFS(matrix, start, end):
         path.insert(0, node)
         node = visited[node]
   
-    # In ra visited và path
+    # In ra visited và path để kiểm tra
     print(visited)
     print(path)
 
@@ -80,20 +84,25 @@ def DFS(matrix, start, end):
     
     path=[]
     visited={}
-    node_before = {}
+    node_before = {} # Danh sách các node trước đó của node hiện tại
 
-    stack = [start]
-    visited[start] = None
+    # Sử dụng stack để thực hiện DFS
+    stack = [start] # stack chứa các node cần thăm, push start vào stack
+    visited[start] = None # start là node đầu tiên nên node thăm trước đó là None
     node_before[start] = None
 
     while stack:
-        node = stack.pop()
-        visited[node] = node_before[node]
+        node = stack.pop() # Lấy node cuối cùng ra khỏi stack (thăm đỉnh)
+        visited[node] = node_before[node] # Đánh dấu node đã thăm
 
+        # Nếu node vừa thăm là end thì dừng tìm kiếm
         if node == end:
             break
-
+        
+        # Thêm các node kề của node vừa thăm vào stack
         for i in range(len(matrix[node])):
+            # Nếu có cạnh nối từ node đang xét đến node i và node i chưa được thăm, đánh dấu node trước đó của node i là node đang xét
+            # Push node i vào stack
             if matrix[node][i] and i not in visited:
                 node_before[i] = node
                 stack.append(i)
@@ -104,7 +113,7 @@ def DFS(matrix, start, end):
         path.insert(0, node)
         node = visited[node]
   
-    # In ra visited và path
+    # In ra visited và path để kiểm tra
     print(visited)
     print(path)
    
@@ -134,28 +143,36 @@ def UCS(matrix, start, end):
     # TODO:  
     path=[]
     visited={}
-    dist=[float('inf')] * len(matrix)
+    dist=[float('inf')] * len(matrix) # dist là khoảng cách từ start đến các đỉnh khác, đặt giá trị ban đầu là vô cực
 
-    queue = [(0, start, None)]
+    queue = [(0, start, None)] # Đỉnh bắt đầu là start. (dist, node, node_before) của start là (0, start, None)
     dist[start] = 0
 
     while queue:
-        queue.sort(key=lambda x: x[0])
-        u = queue.pop(0) # u[0], u[1], u[2] lần lượt là dist, node, node_before
+        queue.sort(key=lambda x: x[0]) # Sắp xếp queue theo dist
+        u = queue.pop(0) # Lấy ra đỉnh có dist nhỏ nhất
 
-        if u[1] in visited:
+        dist_node, node, node_before = u[0], u[1], u[2]
+
+        # Nếu node đã được thăm thì bỏ qua
+        if node in visited:
             continue
 
-        visited[u[1]] = u[2]
+        visited[node] = node_before # Đánh dấu node đã thăm, cập nhật node trước của node đó
 
-        if u[1] == end: # u[1] là đỉnh vừa thăm
+        # Nếu node vừa thăm là end thì dừng tìm kiếm
+        if node == end:
             break
         
-        for i in range(len(matrix[u[1]])):
-            if matrix[u[1]][i] and i not in visited:
-                if dist[i] > dist[u[1]] + matrix[u[1]][i]:
-                    dist[i] = dist[u[1]] + matrix[u[1]][i]
-                    queue.append((dist[i], i, u[1]))
+        # Duyệt qua các đỉnh kề của node vừa thăm
+        for i in range(len(matrix[node])):
+            # Nếu có cạnh nối từ node đang xét đến node i và node i chưa được thăm
+            if matrix[node][i] and i not in visited:
+                # Cập nhật dist[i] nếu có cách đi tốt hơn
+                # Thêm (dist, node, node_before) của i vào queue
+                if dist[i] > dist[node] + matrix[node][i]:
+                    dist[i] = dist[node] + matrix[node][i]
+                    queue.append((dist[i], i, node))
         
     node = end
     # Truy ngược lại từ end để tìm path
@@ -163,13 +180,13 @@ def UCS(matrix, start, end):
         path.insert(0, node)
         node = visited[node]
 
-    # In ra visited và path
+    # In ra visited và path để kiểm tra
     print(visited)
     print(path)
 
     return visited, path
 
-
+# Thuật toán Greedy Best First Search sử dụng hàm heuristic h = edge weight
 def GBFS(matrix, start, end):
     """
     Greedy Best First Search algorithm 
@@ -195,22 +212,30 @@ def GBFS(matrix, start, end):
     path=[]
     visited={}
 
-    queue = [(0, start, None)]
+    queue = [(0, start, None)] # (h, node, node_before) của start là (0, start, None)
 
     while queue:
-        queue.sort(key=lambda x: x[0])
-        u = queue.pop(0) # đỉnh có cạnh nhỏ nhất
+        queue.sort(key=lambda x: x[0]) # Sắp xếp queue theo h
+        u = queue.pop(0) # Lấy ra đỉnh có h nhỏ nhất
 
-        if u[1] in visited:
+        h, node, node_before = u[0], u[1], u[2]
+
+        # Nếu node đã được thăm thì bỏ qua
+        if node in visited:
             continue
-        visited[u[1]] = u[2]
 
-        if u[1] == end: # u[1] là đỉnh vừa thăm
+        visited[node] = node_before # Đánh dấu node đã thăm, cập nhật node trước của node đó
+
+        # Nếu node vừa thăm là end thì dừng tìm kiếm
+        if node == end:
             break
 
-        for i in range(len(matrix[u[1]])):
-            if matrix[u[1]][i] and i not in visited:
-                queue.append((matrix[u[1]][i], i, u[1]))
+        # Duyệt qua các đỉnh kề của node vừa thăm
+        for i in range(len(matrix[node])):
+            # Nếu có cạnh nối từ node đang xét đến node i và node i chưa được thăm
+            if matrix[node][i] and i not in visited:
+                h = matrix[node][i] # h là edge weight từ node đang xét đến node i
+                queue.append((h, i, node)) # Thêm (h, node, node_before) của i vào queue
         
     node = end
     # Truy ngược lại từ end để tìm path
@@ -218,17 +243,18 @@ def GBFS(matrix, start, end):
         path.insert(0, node)
         node = visited[node]
 
-    # In ra visited và path
+    # In ra visited và path để kiểm tra
     print(visited)
     print(path)
 
     return visited, path
 
-# Hàm heuristic cho A* sử dụng khoảng cách Euclidean giữa 2 điểm
+# Hàm heuristic cho A* sử dụng Euclidean distance
 def eclidean_distance(pos1, pos2):
+    # h = sqrt((x1 - x2)^2 + (y1 - y2)^2)
     return np.sqrt((pos1[0] - pos2[0])**2 + (pos1[1] - pos2[1])**2)
 
-# Thuật toán A*
+# Thuật toán A* sử dụng hàm heuristic h = eclidean_distance(pos[current vertex], pos[Goal])
 def Astar(matrix, start, end, pos):
     """
     A* Search algorithm
@@ -255,31 +281,39 @@ def Astar(matrix, start, end, pos):
 
     path=[]
     visited={}
-    dist=[float('inf')] * len(matrix)
+    dist=[float('inf')] * len(matrix) # dist[i] là khoảng cách từ start đến đỉnh i, đặt giá trị ban đầu là vô cực
 
-    queue = [(0, start, None)] # (f, node, node_before), f = g + h
+    queue = [(0, start, None)] # (f, node, node_before) của start là (0, start, None), f = g + h
+    # g là khoảng cách từ start đến đỉnh đang xét, h là khoảng cách từ đỉnh đang xét đến end
     dist[start] = 0
 
     while queue:
-        queue.sort(key=lambda x: x[0])
-        u = queue.pop(0) 
-        
-        if u[1] in visited:
-            continue
-        visited[u[1]] = u[2]
+        queue.sort(key=lambda x: x[0]) # Sắp xếp queue theo f
+        u = queue.pop(0) # Lấy ra đỉnh có f nhỏ nhất
 
-        if u[1] == end:
+        f, node, node_before = u[0], u[1], u[2]
+        
+        # Nếu node đã được thăm thì bỏ qua
+        if node in visited:
+            continue
+
+        visited[node] = node_before # Đánh dấu node đã thăm, cập nhật node trước của node đó
+
+        # Nếu node vừa thăm là end thì dừng tìm kiếm
+        if node == end:
             break
 
-        for i in range(len(matrix[u[1]])):
-            if matrix[u[1]][i] and i not in visited:
-                if dist[i] > dist[u[1]] + matrix[u[1]][i]: # nếu có cách đi tốt hơn
-                    dist[i] = dist[u[1]] + matrix[u[1]][i] # cập nhật dist (dist là khoảng cách từ start đến đỉnh đang xét)
+        # Duyệt qua các đỉnh kề của node vừa thăm
+        for i in range(len(matrix[node])):
+            # Nếu có cạnh nối từ node đang xét đến node i và node i chưa được thăm
+            if matrix[node][i] and i not in visited:
+                if dist[i] > dist[node] + matrix[node][i]: # Cập nhật dist[i] nếu có cách đi tốt hơn
+                    dist[i] = dist[node] + matrix[node][i]
                 
-                g = dist[i] # g là khoảng cách từ start đến đỉnh đang xét
+                g = dist[i] # g là khoảng cách từ start đến đỉnh đang xét, dist[i]
                 h = eclidean_distance(pos[i], pos[end]) # h là khoảng cách (heuristic) từ đỉnh đang xét đến end
                 f = g + h # f = g + h
-                queue.append((f, i, u[1])) # thêm vào queue
+                queue.append((f, i, node)) # Thêm (f, node, node_before) của i vào queue 
 
     node = end
     # Truy ngược lại từ end để tìm path
@@ -287,7 +321,7 @@ def Astar(matrix, start, end, pos):
         path.insert(0, node)
         node = visited[node]
 
-    # In ra visited và path
+    # In ra visited và path để kiểm tra
     print(visited)
     print(path)
 
