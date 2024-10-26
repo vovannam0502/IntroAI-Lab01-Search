@@ -32,6 +32,9 @@ def BFS(matrix, start, end):
     node_before[start] = None 
 
     while queue:
+        print("queue:", queue)
+        print("visited:", visited)
+        print("node_before:", node_before)
         node = queue.pop(0) # Lấy node đầu tiên ra khỏi queue (thăm đỉnh)
         visited[node] = node_before[node] # Đánh dấu node đã thăm
 
@@ -43,15 +46,19 @@ def BFS(matrix, start, end):
         for i in range(len(matrix[node])):
             # Nếu có cạnh nối từ node đang xét đến node i và node i chưa được thăm, đánh dấu node trước đó của node i là node đang xét
             # Push node i vào queue
-            if matrix[node][i] and i not in visited:
+            if matrix[node][i] and i not in visited and i not in queue:
                 node_before[i] = node
                 queue.append(i)
 
-    node = end
-    # Truy ngược lại từ end để tìm path
-    while node != None:
-        path.insert(0, node)
-        node = visited[node]
+    # Kiểm tra xem node end có trong visited không
+    if end in visited:
+        node = end
+        # Truy ngược lại từ end để tìm path
+        while node is not None:
+            path.insert(0, node)
+            node = visited[node]
+    else:
+        path = []  # Nếu không tìm thấy đường đi thì trả về đường đi rỗng
   
     # In ra visited và path để kiểm tra
     print(visited)
@@ -92,7 +99,11 @@ def DFS(matrix, start, end):
     node_before[start] = None
 
     while stack:
+        print("stack:", stack)
+        print("visited:", visited)
+        print("node_before:", node_before)
         node = stack.pop() # Lấy node cuối cùng ra khỏi stack (thăm đỉnh)
+
         visited[node] = node_before[node] # Đánh dấu node đã thăm
 
         # Nếu node vừa thăm là end thì dừng tìm kiếm
@@ -107,11 +118,15 @@ def DFS(matrix, start, end):
                 node_before[i] = node
                 stack.append(i)
 
-    node = end
-    # Truy ngược lại từ end để tìm path
-    while node != None:
-        path.insert(0, node)
-        node = visited[node]
+    # Kiểm tra xem node end có trong visited không
+    if end in visited:
+        node = end
+        # Truy ngược lại từ end để tìm path
+        while node is not None:
+            path.insert(0, node)
+            node = visited[node]
+    else:
+        path = []  # Nếu không tìm thấy đường đi thì trả về đường đi rỗng
   
     # In ra visited và path để kiểm tra
     print(visited)
@@ -174,11 +189,15 @@ def UCS(matrix, start, end):
                     dist[i] = dist[node] + matrix[node][i]
                     queue.append((dist[i], i, node))
         
-    node = end
-    # Truy ngược lại từ end để tìm path
-    while node != None:
-        path.insert(0, node)
-        node = visited[node]
+    # Kiểm tra xem node end có trong visited không
+    if end in visited:
+        node = end
+        # Truy ngược lại từ end để tìm path
+        while node is not None:
+            path.insert(0, node)
+            node = visited[node]
+    else:
+        path = []  # Nếu không tìm thấy đường đi thì trả về đường đi rỗng
 
     # In ra visited và path để kiểm tra
     print(visited)
@@ -237,11 +256,15 @@ def GBFS(matrix, start, end):
                 h = matrix[node][i] # h là edge weight từ node đang xét đến node i
                 queue.append((h, i, node)) # Thêm (h, node, node_before) của i vào queue
         
-    node = end
-    # Truy ngược lại từ end để tìm path
-    while node != None:
-        path.insert(0, node)
-        node = visited[node]
+    # Kiểm tra xem node end có trong visited không
+    if end in visited:
+        node = end
+        # Truy ngược lại từ end để tìm path
+        while node is not None:
+            path.insert(0, node)
+            node = visited[node]
+    else:
+        path = []  # Nếu không tìm thấy đường đi thì trả về đường đi rỗng
 
     # In ra visited và path để kiểm tra
     print(visited)
@@ -315,11 +338,15 @@ def Astar(matrix, start, end, pos):
                 f = g + h # f = g + h
                 queue.append((f, i, node)) # Thêm (f, node, node_before) của i vào queue 
 
-    node = end
-    # Truy ngược lại từ end để tìm path
-    while node != None:
-        path.insert(0, node)
-        node = visited[node]
+    # Kiểm tra xem node end có trong visited không
+    if end in visited:
+        node = end
+        # Truy ngược lại từ end để tìm path
+        while node is not None:
+            path.insert(0, node)
+            node = visited[node]
+    else:
+        path = []  # Nếu không tìm thấy đường đi thì trả về đường đi rỗng
 
     # In ra visited và path để kiểm tra
     print(visited)
