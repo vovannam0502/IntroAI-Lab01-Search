@@ -32,9 +32,6 @@ def BFS(matrix, start, end):
     node_before[start] = None 
 
     while queue:
-        print("queue:", queue)
-        print("visited:", visited)
-        print("node_before:", node_before)
         node = queue.pop(0) # Lấy node đầu tiên ra khỏi queue (thăm đỉnh)
         visited[node] = node_before[node] # Đánh dấu node đã thăm
 
@@ -99,9 +96,6 @@ def DFS(matrix, start, end):
     node_before[start] = None
 
     while stack:
-        print("stack:", stack)
-        print("visited:", visited)
-        print("node_before:", node_before)
         node = stack.pop() # Lấy node cuối cùng ra khỏi stack (thăm đỉnh)
 
         visited[node] = node_before[node] # Đánh dấu node đã thăm
@@ -164,7 +158,7 @@ def UCS(matrix, start, end):
     dist[start] = 0
 
     while queue:
-        queue.sort(key=lambda x: x[0]) # Sắp xếp queue theo dist
+        queue.sort(key=lambda x: x[0]) # Sắp xếp queue theo dist, dist nhỏ nhất ở đầu queue
         u = queue.pop(0) # Lấy ra đỉnh có dist nhỏ nhất
 
         dist_node, node, node_before = u[0], u[1], u[2]
@@ -234,7 +228,7 @@ def GBFS(matrix, start, end):
     queue = [(0, start, None)] # (h, node, node_before) của start là (0, start, None)
 
     while queue:
-        queue.sort(key=lambda x: x[0]) # Sắp xếp queue theo h
+        queue.sort(key=lambda x: x[0]) # Sắp xếp queue theo h, h nhỏ nhất ở đầu queue
         u = queue.pop(0) # Lấy ra đỉnh có h nhỏ nhất
 
         h, node, node_before = u[0], u[1], u[2]
@@ -273,8 +267,8 @@ def GBFS(matrix, start, end):
     return visited, path
 
 # Hàm heuristic cho A* sử dụng Euclidean distance
+# h = sqrt((x1 - x2)^2 + (y1 - y2)^2)
 def eclidean_distance(pos1, pos2):
-    # h = sqrt((x1 - x2)^2 + (y1 - y2)^2)
     return np.sqrt((pos1[0] - pos2[0])**2 + (pos1[1] - pos2[1])**2)
 
 # Thuật toán A* sử dụng hàm heuristic h = eclidean_distance(pos[current vertex], pos[Goal])
@@ -311,7 +305,7 @@ def Astar(matrix, start, end, pos):
     dist[start] = 0
 
     while queue:
-        queue.sort(key=lambda x: x[0]) # Sắp xếp queue theo f
+        queue.sort(key=lambda x: x[0]) # Sắp xếp queue theo f, f nhỏ nhất ở đầu queue
         u = queue.pop(0) # Lấy ra đỉnh có f nhỏ nhất
 
         f, node, node_before = u[0], u[1], u[2]
